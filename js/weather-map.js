@@ -1,10 +1,3 @@
-// $.get("https://api.openweathermap.org/data/2.5/onecall", {
-//     APPID: OPEN_WEATHER_APPID,
-//     q:     "San Antonio, US"
-// }).done(function(data) {
-//     console.log(data);
-// });
-
 // $.get("http://api.openweathermap.org/data/2.5/weather", {
 //     APPID: OPEN_WEATHER_APPID,
 //     lat:    29.423017,
@@ -30,5 +23,7 @@ $.get("http://api.openweathermap.org/data/2.5/onecall", {
     units: "imperial"
 }).done(function(data) {
     console.log('onecall', data);
-    console.log(data.lat);
+    let unixTimeStamp = data.current.dt;
+    let dateTime = new Date(unixTimeStamp * 1000);
+    console.log(dateTime);
 });
