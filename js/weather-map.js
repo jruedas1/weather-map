@@ -22,8 +22,24 @@ $.get("http://api.openweathermap.org/data/2.5/onecall", {
     lon:   -98.48527,
     units: "imperial"
 }).done(function(data) {
+    function appendLeadingZeroes(n){
+        if(n <= 9){
+            return "0" + n;
+        }
+        return n;
+    }
+
     console.log('onecall', data);
     let unixTimeStamp = data.current.dt;
+    const months = ["JAN", "FEB", "MAR","APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
     let dateTime = new Date(unixTimeStamp * 1000);
-    console.log(dateTime);
+    let year = dateTime.getFullYear();
+    let month = months[dateTime.getMonth()];
+    let day = dateTime.getDay();
+    let hour = appendLeadingZeroes(dateTime.getHours());
+    let minutes = appendLeadingZeroes(dateTime.getMinutes());
+    let seconds = appendLeadingZeroes(dateTime.getSeconds());
+    console.log(month + " " + day + " " + year + " " + hour + ":" + minutes + ":" + seconds);
+
 });
