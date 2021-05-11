@@ -50,19 +50,31 @@ $.get("http://api.openweathermap.org/data/2.5/onecall", {
         return cardinalDirection;
     }
 
-    console.log('onecall', data);
+    // console.log('onecall', data);
     let unixTimeStamp = data.current.dt;
     const months = ["JAN", "FEB", "MAR","APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
 
-    let dateTime = new Date(unixTimeStamp * 1000);
-    let year = dateTime.getFullYear();
-    let month = months[dateTime.getMonth()];
-    let day = dateTime.getDay();
-    let hour = appendLeadingZeroes(dateTime.getHours());
-    let minutes = appendLeadingZeroes(dateTime.getMinutes());
-    let seconds = appendLeadingZeroes(dateTime.getSeconds());
-    console.log(month + " " + day + " " + year + " " + hour + ":" + minutes + ":" + seconds);
-    let formattedDateTime = month + " " + day + " " + year + " " + hour + ":" + minutes + ":" + seconds;
+    // let dateTime = new Date(unixTimeStamp * 1000);
+    // let year = dateTime.getFullYear();
+    // let month = months[dateTime.getMonth()];
+    // let day = dateTime.getDay();
+    // let hour = appendLeadingZeroes(dateTime.getHours());
+    // let minutes = appendLeadingZeroes(dateTime.getMinutes());
+    // let seconds = appendLeadingZeroes(dateTime.getSeconds());
+    // // console.log(month + " " + day + " " + year + " " + hour + ":" + minutes + ":" + seconds);
+    // let formattedDateTime = month + " " + day + " " + year + " " + hour + ":" + minutes + ":" + seconds;
+
+    function formatTime(timeStamp){
+        let dateTime = new Date(timeStamp * 1000);
+        let year = dateTime.getFullYear();
+        let month = months[dateTime.getMonth()];
+        let day = dateTime.getDay();
+        let hour = appendLeadingZeroes(dateTime.getHours());
+        let minutes = appendLeadingZeroes(dateTime.getMinutes());
+        let seconds = appendLeadingZeroes(dateTime.getSeconds());
+        let formattedDateTime = month + " " + day + " " + year + " " + hour + ":" + minutes + ":" + seconds;
+        return formattedDateTime;
+    }
 
     let currentTemp = data.current.temp;
     let humidity = data.current.humidity;
@@ -74,22 +86,34 @@ $.get("http://api.openweathermap.org/data/2.5/onecall", {
     let icon = data.current.weather[0].icon;
     let iconLink = "http://openweathermap.org/img/wn/" + icon + "@2x.png";
 
-    console.log("current temperature: " + currentTemp);
-    console.log("Humidity: " + humidity + "%");
-    console.log("Feels Like: " + feelsLike);
-    console.log("Cloudiness: " + clouds + "%");
-    console.log("Wind: " + windSpeed + "mph, direction " + windDirection);
-    console.log(data.current.weather[0]);
-    console.log("Current weather: " + weatherDescription);
-    console.log("http://openweathermap.org/img/wn/" + icon + "@2x.png");
-
-
     $("#weather").append("<p>San Antonio, TX</p>");
-    $("#weather").append("<p>"+ formattedDateTime + "</p>");
+    $("#weather").append("<p>"+ formatTime(unixTimeStamp) + "</p>");
     $("#weather").append("<p>Current weather: " + weatherDescription + "</p>");
     $("#weather").append("<p><img src='" + iconLink +"'></p>");
     $("#weather").append("<p>Current temperature: " + currentTemp + "</p>");
     $("#weather").append("<p>Humidity: " + humidity + "%");
     $("#weather").append("<p>Feels Like: " + feelsLike + "</p>");
     $("#weather").append("<p>Wind: " + windCardinalDirection(windDirection) + " " + windSpeed + "mph.</p>");
+
+    $("#weather").append("<hr>")
+
+    // console.log(data.daily[0]);
+for (let i = 0; i < 5; i++){
+    $("#weather").append("<p>" + formatTime(data.daily[i].dt) + '</p>');
+    $("#weather").append("<p>Expected weather: " + data.daily[i].weather[0].description + "</p>");
+    $("#weather").append("<p><img src='" + "http://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon +"@2x.png'></p>");
+    $("#weather").append("<p>Temperature: " + data.daily[i].temp.max + "/" + data.daily[0].temp.min + "</p>");
+    $("#weather").append("<p>Humidity: " + data.daily[i].humidity + "%</p>");
+    $("#weather").append("<p>Wind: " + windCardinalDirection(data.daily[i].wind_deg) + " " + data.daily[i].wind_speed + "mph.</p>");
+    $("#weather").append("<hr>");
+}
+
+    // $("#weather").append("<p>" + formatTime(data.daily[0].dt) + '</p>');
+    // $("#weather").append("<p>Expected weather: " + data.daily[0].weather[0].description + "</p>");
+    // $("#weather").append("<p><img src='" + "http://openweathermap.org/img/wn/" + data.daily[0].weather[0].icon +"@2x.png'></p>");
+    // $("#weather").append("<p>Temperature: " + data.daily[0].temp.max + "/" + data.daily[0].temp.min + "</p>");
+    // $("#weather").append("<p>Humidity: " + data.daily[0].humidity + "%</p>");
+    // $("#weather").append("<p>Wind: " + windCardinalDirection(data.daily[0].wind_deg) + " " + data.daily[0].wind_speed + "mph.</p>");
+    // $("#weather").append("<hr>");
 });
+
